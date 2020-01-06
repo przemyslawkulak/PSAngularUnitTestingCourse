@@ -4,6 +4,7 @@ import { HeroService } from "../hero.service";
 import { NO_ERRORS_SCHEMA, Component, Input } from "@angular/core";
 import { of } from "rxjs";
 import { Hero } from "../hero";
+import { By } from "@angular/platform-browser";
 
 describe("HeroesComponent (shallow tests)", () => {
   let fixture: ComponentFixture<HeroesComponent>; // zmienna na fiksture komponentu
@@ -39,7 +40,7 @@ describe("HeroesComponent (shallow tests)", () => {
       declarations: [HeroesComponent, FakeHeroComponent], // deklaracje komponentu i child komponnetu
       providers: [{ provide: HeroService, useValue: mockHeroService }]
       // dłuższa wersja wprowadzenia providera do wstawienia wartości z mocka
-      // schemas: [NO_ERRORS_SCHEMA]
+      // schemas: [NO_ERRORS_SCHEMA] // ignoruje Child elements
     });
     fixture = TestBed.createComponent(HeroesComponent); // tworzy fiksture
   });
@@ -47,5 +48,11 @@ describe("HeroesComponent (shallow tests)", () => {
     mockHeroService.getHeroes.and.returnValue(of(HEROES)); // mokuje jakie dane zwroci konkretna funkcja serwisu
     fixture.detectChanges(); // mockuje ngOnInit
     expect(fixture.componentInstance.heroes.length).toBe(3); // sprawdza ile objektów  bedzie w zmiennej 'heroes'
+  });
+  it("should create one li for each hero", () => {
+    mockHeroService.getHeroes.and.returnValue(of(HEROES)); // mokuje jakie dane zwroci konkretna funkcja serwisu
+    fixture.detectChanges(); // mockuje ngOnInit
+
+    expect(fixture.debugElement.queryAll(By.css("li")).length).toBe(3);
   });
 });
