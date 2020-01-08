@@ -1,4 +1,11 @@
-import { TestBed, ComponentFixture } from "@angular/core/testing";
+import {
+  TestBed,
+  ComponentFixture,
+  fakeAsync,
+  tick,
+  flush,
+  async
+} from "@angular/core/testing";
 import { HeroDetailComponent } from "./hero-detail.component";
 import { ActivatedRoute } from "@angular/router";
 import { HeroService } from "../hero.service";
@@ -44,4 +51,27 @@ describe("HeroDetailComponent", () => {
       "SUPERDUDE"
     );
   });
+
+  // działa z asynchronicznym kodem, zarówno z promisami i setTimout
+  it("should call updatehero when save is called", fakeAsync(() => {
+    mockHeroService.updateHero.and.returnValue(of({}));
+    fixture.detectChanges();
+
+    fixture.componentInstance.save();
+    flush(); // making ansynchron code as synchron
+    expect(mockHeroService.updateHero).toHaveBeenCalled();
+  }));
+
+  // test poniżej do promisów
+  // it("should call updatehero when save is called", async(() => {
+  //   mockHeroService.updateHero.and.returnValue(of({}));
+  //   fixture.detectChanges();
+
+  //   fixture.componentInstance.save();
+
+  //   fixture.whenStable().then(() => {
+  //     // kod w środku działa dopiero gdy wszystkie promisy zostana rozwiązane
+  //     expect(mockHeroService.updateHero).toHaveBeenCalled();
+  //   });
+  // }));
 });

@@ -33,14 +33,21 @@ export class HeroDetailComponent implements OnInit {
   }
 
   save(): void {
-    debounce(
-      () => {
-        this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
-      },
-      250,
-      false
-    )();
+    const p = new Promise(resolve => {
+      this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
+      resolve();
+    });
   }
+
+  // save(): void {
+  //   debounce(
+  //     () => {
+  //       this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
+  //     },
+  //     250,
+  //     false
+  //   )();
+  // }
 }
 function debounce(func, wait, immediate) {
   let timeout;
